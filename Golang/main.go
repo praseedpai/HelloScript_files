@@ -268,6 +268,10 @@ func main() {
 		fmt.Print(cmd.Stderr)
 	}
 	fmt.Println("Delete Via Command")
+
+	//Multiple return values from function
+	s1, s2 := swap(10, 20)
+	fmt.Println(s1, s2)
 }
 
 func sayHello(name string) *string {
@@ -339,4 +343,8 @@ type Public struct {
 
 type private struct {
 	Pub, priv int
+}
+
+func swap(x int32, y int32) (int32, int32) {
+	return y, x
 }
