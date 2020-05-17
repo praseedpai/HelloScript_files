@@ -1,7 +1,11 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
 )
 
 func main() {
@@ -33,8 +37,8 @@ func main() {
 	var f64 float64 = 1.21231213123123112312312312
 	var c64 complex64 = complex(f32, f32)
 	var c128 complex128 = complex(f64, f64)
-	var sPtr *string = &name
-	var i16Ptr *int16 = &i16
+	var sPtr *string = &name //Pointer to string
+	var i16Ptr *int16 = &i16 // Pointer to int16 //Pointer arithmetic is not a possibility in golang
 	fmt.Println(b, ui8, ui16, ui32, ui64, i8, i16, i32, i64, f32, f64, c64, c128, real(c64), imag((c128)), sPtr, i16Ptr, *sPtr, *i16Ptr)
 
 	//Control flow
@@ -43,7 +47,7 @@ func main() {
 	} else if year > 2000 {
 		fmt.Println("Gt than 2000 but less that or equal to 2008")
 	} else {
-		fmt.Println("Less than 2000")
+		fmt.Println("Less than or equal to 2000")
 	}
 
 	switch name := "X"; name {
@@ -51,7 +55,7 @@ func main() {
 		fmt.Println("Its' X")
 	case "Z", "z":
 		fmt.Println("Got Z")
-		fallthrough
+		fallthrough //for deliberate fall through use fallthrough (Most language default to fallthrough if there is not break;)
 	case "Y":
 		fmt.Println("Got Y")
 		fmt.Println("Its' not X")
@@ -60,16 +64,15 @@ func main() {
 	}
 
 	//Loop 	- Go has only for loops (Which comes in many forms)
-	//Print 1 to 10
+	//Print 1 to 5
 	for i := 0; i < 5; i++ {
 		fmt.Println(fmt.Sprintf("%d: Hello beautiful simple for loop", i))
 	}
 
 	//Declaring and initializing an array
 	nums := []uint32{1, 2, 3, 4, 5}
-	//Range loop
 	for i := 0; i < len(nums); i++ {
-		fmt.Println(fmt.Sprintf("%d: Hello cool loop", nums[i]))
+		fmt.Println(fmt.Sprintf("%d: Hello loop", nums[i]))
 	}
 	//Range loop
 	for _, num := range nums { // _ ignores the value
@@ -114,7 +117,7 @@ func main() {
 	}
 	fmt.Println(fmt.Sprintf("Even numbers: %d", coutMapOfOddAndEven["even"]))
 	fmt.Println(fmt.Sprintf("Odd numbers: %d", coutMapOfOddAndEven["odd"]))
-	delete(coutMapOfOddAndEven, "odd")
+	delete(coutMapOfOddAndEven, "odd") //Delete a key in map
 	fmt.Println(fmt.Sprintf("Odd numbers: %d", coutMapOfOddAndEven["odd"]))
 
 	//Find a pythogorean triplet, given the hypotenuse find the other two sides
@@ -128,7 +131,7 @@ func main() {
 	}
 
 	//functioncall
-	fmt.Println(*sayHello("Kochi"))
+	fmt.Println(*sayHello("Kochi")) //Use * to dereference a pointer //sayHello is defined after main()
 	fmt.Println(func(x, y int) int {
 		return x + y
 	}(10, 20))
@@ -158,7 +161,7 @@ func main() {
 	fmt.Println(add(10, 20))
 
 	//structure
-
+	//Definition of structs are avialable after function main()
 	movie := Movie{Name: "Aham", Rating: 4} //Obeys value semantics comparison with nil fails
 	fmt.Println(fmt.Sprintf("%+v", movie))
 	movie.RateMovie()
@@ -204,6 +207,67 @@ func main() {
 	//Public and Private accesors in golang
 	//Only names starting with capital letters will be available to files outside the defining one
 	//Hello Script is supposed to be a single file, try it yourself
+
+	//file io
+	//Create and write to file
+	f, err := os.OpenFile("/tmp/hello-go", os.O_CREATE|os.O_WRONLY, os.ModeType|os.ModePerm)
+	if err != nil {
+		panic(err)
+	}
+	f.WriteString("Programming is fun\n")
+	f.WriteString("Programming is Art\n")
+	f.WriteString("Programming is never booring\n")
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	//Read file
+	f, err = os.Open("/tmp/hello-go")
+	if err != nil {
+		panic(err)
+	}
+	buff := make([]byte, 1024*4)
+	n, err := f.Read(buff)
+	for n == 1024*4 && err != io.EOF {
+		fmt.Print(string(buff))
+		n, err = f.Read(buff)
+	}
+	fmt.Print(string(buff))
+	err = f.Close()
+	if err != nil {
+		panic(err)
+	}
+
+	//on unix systems reading files via shell
+	var stdout bytes.Buffer
+	var stderr bytes.Buffer
+	cmd := exec.Command("cat", "/tmp/hello-go")
+	cmd.Stdout = &stdout
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Print(cmd.Stderr)
+		panic(err)
+	}
+	fmt.Println("Via Command")
+	fmt.Print(cmd.Stdout)
+	fmt.Print(cmd.Stderr)
+
+	//delete file
+	err = os.Remove("/tmp/hello-go")
+	if err != nil {
+		panic(err)
+	}
+
+	//delete file via shell
+	cmd = exec.Command("rm", "/tmp/hello-go")
+	cmd.Stderr = &stderr
+	err = cmd.Run()
+	if err != nil {
+		fmt.Print(cmd.Stderr)
+	}
+	fmt.Println("Delete Via Command")
 }
 
 func sayHello(name string) *string {
