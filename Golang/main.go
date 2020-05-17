@@ -272,6 +272,10 @@ func main() {
 	//Multiple return values from function
 	s1, s2 := swap(10, 20)
 	fmt.Println(s1, s2)
+
+	//Read file defer example
+	res := readFile()
+	fmt.Println(res)
 }
 
 func sayHello(name string) *string {
@@ -347,4 +351,40 @@ type private struct {
 
 func swap(x int32, y int32) (int32, int32) {
 	return y, x
+}
+
+func readFile() int {
+	f, err := os.Open("/tmp/hello-go")
+	//defer calls will be stacked and will get called in the end
+	defer func() int {
+		//defer call to recover from any panics
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic, ", r)
+		}
+		return 9
+	}()
+	defer func() {
+		fmt.Println("Closing")
+		if f != nil {
+			err = f.Close()
+			if err != nil {
+				panic(err)
+			}
+		}
+	}()
+	defer func() {
+		//Will be called before the previous defer
+		fmt.Println("Before closing")
+	}()
+	if err != nil {
+		panic(err)
+	}
+	buff := make([]byte, 1024*4)
+	n, err := f.Read(buff)
+	for n == 1024*4 && err != io.EOF {
+		fmt.Print(string(buff))
+		n, err = f.Read(buff)
+	}
+	fmt.Print(string(buff))
+	return n
 }
