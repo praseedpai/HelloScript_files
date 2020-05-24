@@ -11,11 +11,11 @@ import (
 //Preamble: Unless explicitly programmed paralellism is a property of the runtime.
 //			We cannot explicitly program for paralellism in golang.
 
-//Expedition entry point, unravell the mistery, reduce up, reduce down, see as it is
+//Expedition entry point
 func HelloRealWorld() {
 	//Concurrency hello world - prints helloworld from goroutine
 	//(`go` command Schedules a piece of code to be executed at the will of golang software defined scheduler,
-	//such a scheduled function is called goroutine)
+	//A scheduled function is called goroutine)
 	//(other languages have things like fibers, green threads, threads, virtual threads, actors, coroutines etc
 	//and ofcourse semantic differences are there between most of them)
 
@@ -46,7 +46,7 @@ func HelloRealWorld() {
 
 	// go pubSubChannels()
 	// go channels()
-	go mutualMessaging()
+	// go mutualMessaging()
 
 	//Signal watcher
 	exitOnCtrlC()
