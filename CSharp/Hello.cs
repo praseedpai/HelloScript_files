@@ -1,15 +1,3 @@
-﻿//
-//  HelloScript.cs
-//  HelloScript for C#
-//
-//  Created by Peter on 02/05/2020.
-//  Copyright © 2020 Peter. MIT License.
-//
-// Create console app : dotnet new console
-// Compile            : dotnet build
-// Execute            : dotnet run
-//
-
 using System;
 using System.IO;
 using System.Linq;
@@ -244,24 +232,25 @@ namespace HelloScript
              * Create new directories in the workspace.
              * Create and write to a new file or append to an existing one.
              */
-            var path = Directory.GetCurrentDirectory();
-            path = Path.Combine(path, "myDir");
-            Directory.CreateDirectory(path);
-            path = Path.Combine(path, "annualreview.txt");
+            try {
+           	 var path = Directory.GetCurrentDirectory();
+           	 path = Path.Combine(path, "myDir");
+           	 Directory.CreateDirectory(path);
+           	 path = Path.Combine(path, "annualreview.txt");
 
-            var lines = new List<string>() { "1st line", "2nd line", "", "your happy place", "bla bla bla..." };
+          	  var lines = new List<string>() { "1st line", "2nd line", "", "your happy place", "bla bla bla..." };
 
-            if (!File.Exists(path))
-            {
-                using FileStream fs = File.Create(path);
-                using var sr = new StreamWriter(fs);
-                foreach(var line in lines) {
-                    sr.WriteLine(line);
-                }
-            }
-            else {
-                Console.WriteLine($"File \"{path}\" already exists");
-            }
+          	  if (!File.Exists(path))
+           	 {
+             	   FileStream fs = File.Create(path);
+             	   var sr = new StreamWriter(fs);
+              		  foreach(var line in lines) {
+                    		sr.WriteLine(line);
+               		 }
+           	 }
+         	   else {
+               		 Console.WriteLine($"File \"{path}\" already exists");
+            		}
 
             using (StreamReader sr = new StreamReader(path))
             {
@@ -272,8 +261,8 @@ namespace HelloScript
                 }
             }
             Console.WriteLine("----------------------------------");
-
-
+            }
+            catch(Exception e ) {Console.WriteLine("Eroor...in File IO" + e.ToString());} 
             /*
              * Regex:
              *
