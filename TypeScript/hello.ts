@@ -1,9 +1,6 @@
-// compile the file using command: tsc hello.ts
-// run command: node hello.js
-
 import * as  _ from 'lodash'; // Javascript utility library. command: npm i --save lodash
-import * as fs from 'fs'; // fs module to access file system. command: npm install -g --save-dev @types/node
- 
+import * as fs from 'file-system'; // fs module to access file system. command: npm install -g --save-dev @types/node
+//import * as RegExp from 'regex';
 // A Simple Console Output
 // Equivalent to Printf
 
@@ -290,8 +287,8 @@ console.log("=================================")
 let hell_check = new RegExp("^Hell")
 let str = "Hello World"
 
-if (hell_check[Symbol.match](str))
-    console.log("Yup - its evil (Compiled)")
+if (hell_check.test(str))
+   console.log("Yup - its evil (Compiled)")
 
 
  console.log(str.replace(/l/gi, '')) // removes character 'l'
@@ -301,6 +298,7 @@ if (hell_check[Symbol.match](str))
 
 // install @types/node module
 // command: npm install -g --save-dev @types/node
+
 
 let res = '';
 fs.writeFile('file.txt','Hello World Of Typescript!!', function(err) {
@@ -312,7 +310,7 @@ fs.readFile('file.txt', function(err, data) {
     res = data.toString();
     console.log(res);
 });
+
 console.log("=================================")
   
 // ----- End of File
-
