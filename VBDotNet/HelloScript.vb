@@ -171,6 +171,20 @@ Module HelloScript
         Console.WriteLine("----------------------------------")
 
 
+        ' Tuples are immutable
+
+        Dim tup1 As Tuple(Of Integer, Double) = New Tuple(Of Integer, Double)(12, 34.56)
+        Dim tup2 As Tuple(Of String, String) = New Tuple(Of String, String)("abc", "xyz")
+
+        ' Following action Is Not valid For tuples
+        ' tup1.Item1 = 100
+
+        ' So Let's create a new tuple as follows
+        Dim tup3 = New Tuple(Of String, String)(tup1.Item1.ToString() + tup2.Item1, tup1.Item2.ToString() + tup2.Item2)
+        Console.WriteLine(tup3.Item1 + " " + tup3.Item2)
+        Console.WriteLine("----------------------------------")
+
+
         'Map-filter-reduce
         'using linq query syntax
         Dim foo = New List(Of Integer)({2, 18, 9, 22, 17, 24, 8, 12, 27})
@@ -260,6 +274,24 @@ Module HelloScript
         Catch e As Exception
             Console.WriteLine("Error...in File IO" + e.ToString())
         End Try
+
+        ' Execute the command 'dir' and print its output
+
+        Dim startInfo = New ProcessStartInfo() With {
+            .FileName = "cmd.exe",
+            .Arguments = "/C dir",
+            .WindowStyle = ProcessWindowStyle.Hidden,
+            .CreateNoWindow = True,
+            .RedirectStandardOutput = True,
+            .UseShellExecute = False
+        }
+
+        Dim cmd = Process.Start(startInfo)
+        Dim output = cmd.StandardOutput.ReadToEnd()
+        cmd.WaitForExit()
+        Console.WriteLine(output)
+        Console.WriteLine()
+        Console.WriteLine("----------------------------------")
 
 
         'Regex:
